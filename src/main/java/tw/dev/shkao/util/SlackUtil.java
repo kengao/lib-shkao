@@ -10,8 +10,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
@@ -23,13 +21,12 @@ import static tw.dev.shkao.restful.BaseRestResource.getObjectMapper;
  */
 public class SlackUtil {
     
-    public static String post(String message, String url, String username, String icon_emoji){
+    public static String post(String content, String url, String username, String icon_emoji){
         
-        Client client = ClientBuilder.newClient();
-        WebTarget webTarget = client.target(url);
-
+        WebTarget webTarget = WebUtil.getWebTarget(WebUtil.getURL(url));
+        
         Map<String, String> restData = new HashMap<>();
-        restData.put("text", message);
+        restData.put("text", content);
         
         if(username!=null){ 
             restData.put("username", username);

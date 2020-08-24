@@ -44,5 +44,7 @@ import javax.persistence.criteria.CriteriaQuery;
     CriteriaQuery<TYPE> createCriteriaQuery() ;
 
     TYPE getByPrimaryKey(Integer value);
+    
+    void flush();
 }
 

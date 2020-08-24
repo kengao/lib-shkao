@@ -9,7 +9,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.net.InetAddress;
+import java.net.NetworkInterface;
 import java.text.SimpleDateFormat;
+import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
@@ -41,6 +43,14 @@ public class BaseRestResource {
             for (InetAddress inetAddress : InetAddress.getAllByName("localhost")) {
                 LOCAL_ADDRESSES_SET.add(inetAddress.getHostAddress());
             }
+            for(Enumeration<NetworkInterface> eni = NetworkInterface.getNetworkInterfaces(); eni.hasMoreElements(); ) {
+                final NetworkInterface ifc = eni.nextElement();
+                if(ifc.isUp()) {
+                    for(Enumeration<InetAddress> ena = ifc.getInetAddresses(); ena.hasMoreElements(); ) {
+                        LOCAL_ADDRESSES_SET.add(ena.nextElement().getHostAddress());
+                    }
+                }
+            }
         } catch (IOException e) {
             LOGGER.logp(Level.SEVERE, BaseRestResource.class.getName(), "", null, e);
         }
@@ -48,6 +58,7 @@ public class BaseRestResource {
     }
 
     protected static boolean isLocalAddress(String address) {
+        
         return LOCAL_ADDRESSES_SET.contains(address) ;
     }
     

@@ -21,7 +21,7 @@ public class JsonUtil {
     private static final ObjectMapper MAPPER = new ObjectMapper();
      
     static {
-        
+
         MAPPER.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
         MAPPER.disable(SerializationFeature.WRITE_NULL_MAP_VALUES);
         MAPPER.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);

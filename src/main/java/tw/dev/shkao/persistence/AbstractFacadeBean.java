@@ -256,6 +256,11 @@ public abstract class AbstractFacadeBean<TYPE> implements BaseEntityManager<TYPE
         
         return true;
     }
+    
+    @Override
+    public void flush(){
+        getEntityManager().flush();
+    }
 
     ////////////////////////////////////////////////////////////////////////////    
     protected <TYPE> List<TYPE> findEntities(CriteriaQuery<TYPE> criteriaQuery) {

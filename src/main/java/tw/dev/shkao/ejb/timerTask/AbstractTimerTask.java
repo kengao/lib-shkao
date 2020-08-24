@@ -70,13 +70,12 @@ public abstract class AbstractTimerTask extends AbstractHelperBean {
         
         if(dataisChanged){
             for(Timer t : getTimerService().getTimers()){
-                
-                System.out.println("timer info: "+t.getInfo() +" setting: "+ t.getSchedule().getSecond()+" "+t.getSchedule().getMinute()+" "+t.getSchedule().getHour()+" "+
-                        t.getSchedule().getDayOfMonth()+" "+t.getSchedule().getMonth()+" "+t.getSchedule().getDayOfWeek()+" "+t.getSchedule().getYear());
-                if( "maintainTimer".equals(t.getInfo()) )
+                if( "maintainTimer".equals(t.getInfo()) || !getTaskName().equals(t.getInfo()) )
                     continue;
+                
                 t.cancel();
-            }if(!enabled || taskData==null){
+            }
+            if(!enabled){
                 return;
             }
             
@@ -111,17 +110,9 @@ public abstract class AbstractTimerTask extends AbstractHelperBean {
         }
     }
     
-    Date lastUpdated;
-
-    public Date getLastUpdated() {
-        return lastUpdated;
-    }
-
-    public void setLastUpdated(Date lastUpdated) {
-        this.lastUpdated = lastUpdated;
-    }
     
-    
+    protected abstract Date getLastUpdated();
+    protected abstract void setLastUpdated(Date lastUpdated);
     
     
 }
