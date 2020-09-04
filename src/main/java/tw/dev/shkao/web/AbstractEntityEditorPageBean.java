@@ -6,6 +6,8 @@
 package tw.dev.shkao.web;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -29,7 +31,7 @@ public abstract class AbstractEntityEditorPageBean<T extends BaseEntity> extends
     }
     
     
-    public Set<String> getColumns(){
+    public List<String> getColumns(){
         
         Set<String> getSet = new HashSet();
         Set<String> setSet = new HashSet();
@@ -59,7 +61,11 @@ public abstract class AbstractEntityEditorPageBean<T extends BaseEntity> extends
             resultSet.add(s);
         }
         
-        return resultSet;
+        List<String> resultList = new ArrayList(resultSet);
+        
+        Collections.sort(resultList);
+        
+        return resultList;
     }
     
     public void add(){

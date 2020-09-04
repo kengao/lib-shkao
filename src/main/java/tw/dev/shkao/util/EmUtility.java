@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package tw.dev.shkao.util.log;
+package tw.dev.shkao.util;
 
 import java.util.Date;
 import java.util.List;

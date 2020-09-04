@@ -20,7 +20,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-import tw.dev.shkao.util.log.EmUtility;
+import tw.dev.shkao.util.EmUtility;
 
 /**
  * 

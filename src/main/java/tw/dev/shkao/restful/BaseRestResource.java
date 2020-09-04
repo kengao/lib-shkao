@@ -18,9 +18,12 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
+import javax.ws.rs.core.UriInfo;
 import tw.dev.shkao.util.JsonUtil;
 
 /**
@@ -36,6 +39,12 @@ public class BaseRestResource {
 
     private static final Set<String> LOCAL_ADDRESSES_SET = new HashSet<String>();
 
+    @Context
+    protected HttpHeaders headers;
+    @Context
+    protected HttpServletRequest request;
+    @Context
+    protected UriInfo uriInfo;
      
     static {
         try {
@@ -71,17 +80,21 @@ public class BaseRestResource {
             return;
     }
     
+    public void checkRemoteAddress() throws SecurityException{
+        checkRemoteAddress(request);
+    }
+    
     public void checkRemoteAddress(HttpServletRequest request) throws SecurityException{
         checkRemoteAddress(request.getRemoteAddr());
     }
     
-    protected Response buildStringReponse(String message){
+    protected Response buildStringResponse(String message){
 
-        return buildStringReponse(Response.Status.OK, message);
+        return buildStringResponse(Response.Status.OK, message);
 
     }
     
-    protected Response buildStringReponse(Status status, String message){
+    protected Response buildStringResponse(Status status, String message){
 
         Response.ResponseBuilder rb;
 

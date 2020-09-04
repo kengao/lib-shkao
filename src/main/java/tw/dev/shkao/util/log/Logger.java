@@ -14,7 +14,8 @@ public enum Logger {
     PERSISTENCE("persistence"),
     EJB("ejb"),
     WEB("web"),
-    RESTFUL("restful");
+    RESTFUL("restful"),
+    APPLICATION("application");
 
     private static final String DEFAULT_LOGGER_RESOURCES = "LogStrings";
     public static final String FACES_LOGGER_NAME_PREFIX = "tw.dev.shkao";
