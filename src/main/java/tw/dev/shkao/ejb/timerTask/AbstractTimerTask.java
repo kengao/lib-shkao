@@ -14,13 +14,13 @@ import javax.ejb.Timeout;
 import javax.ejb.Timer;
 import javax.ejb.TimerConfig;
 import javax.ejb.TimerService;
-import tw.dev.shkao.ejb.AbstractHelperBean;
+import tw.dev.shkao.ejb.BaseHelperBean;
 
 /**
  *
  * @author kengao
  */
-public abstract class AbstractTimerTask extends AbstractHelperBean {
+public abstract class AbstractTimerTask extends BaseHelperBean {
 
     @Resource 
     protected TimerService timerService;
@@ -47,7 +47,7 @@ public abstract class AbstractTimerTask extends AbstractHelperBean {
             return;
         }
         boolean success = businessLogic(timer);
-        if(success) System.out.print(getTaskName() + ".businessLogic() is executed.");
+        //if(success) System.out.print(getTaskName() + ".businessLogic() is executed.");
         if(success) postTimerExecuted();
     }
     
@@ -69,10 +69,10 @@ public abstract class AbstractTimerTask extends AbstractHelperBean {
         }
         
         if(dataisChanged){
+            
             for(Timer t : getTimerService().getTimers()){
                 if( "maintainTimer".equals(t.getInfo()) || !getTaskName().equals(t.getInfo()) )
                     continue;
-                
                 t.cancel();
             }
             if(!enabled){
@@ -110,9 +110,14 @@ public abstract class AbstractTimerTask extends AbstractHelperBean {
         }
     }
     
+    @Override
+    protected void release(){
+        getTimerService().getTimers().forEach((t) -> {
+            t.cancel();
+        });
+    }
     
     protected abstract Date getLastUpdated();
     protected abstract void setLastUpdated(Date lastUpdated);
-    
     
 }

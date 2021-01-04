@@ -21,7 +21,8 @@ import java.util.logging.Logger;
  * @author kengao
  */
 public class DateTimeUtil {
-
+    private static final int[] orderedFields = new int[]{Calendar.YEAR, Calendar.MONTH, Calendar.DAY_OF_MONTH, Calendar.HOUR_OF_DAY, Calendar.MINUTE, Calendar.SECOND, Calendar.MILLISECOND};
+    
     
     public static boolean isOverlap(Date period1Start, Date period1End, Date period2Start, Date period2End){
         //https://stackoverflow.com/questions/3196099/date-range-overlap-with-nullable-dates
@@ -96,41 +97,34 @@ public class DateTimeUtil {
         return trim( getCalendar(date), field ).getTime();
     }
     
-    public static Calendar trim(Calendar calendar, int field){
-        int year = calendar.get(Calendar.YEAR);
-        int month = calendar.get(Calendar.MONTH);
-        int day = calendar.get(Calendar.DAY_OF_MONTH);
-        int hour = calendar.get(Calendar.HOUR_OF_DAY);
-        int min = calendar.get(Calendar.MINUTE);
-        int sec = calendar.get(Calendar.SECOND);
-        int mils = calendar.get(Calendar.MILLISECOND);
-        
-        switch(field){
-            case Calendar.YEAR:
-                month = calendar.getActualMinimum(Calendar.MONTH);
-            case Calendar.MONTH:
-                day = calendar.getActualMinimum(Calendar.DAY_OF_MONTH);
-            case Calendar.DAY_OF_MONTH:
-                hour = calendar.getActualMinimum(Calendar.HOUR_OF_DAY);
-            case Calendar.HOUR_OF_DAY:
-                min = calendar.getActualMinimum(Calendar.MINUTE);
-            case Calendar.MINUTE:
-                sec = calendar.getActualMinimum(Calendar.SECOND);
-            case Calendar.SECOND:
-                mils = calendar.getActualMinimum(Calendar.MILLISECOND);
-            case Calendar.MILLISECOND:
+    
+    public static Calendar trim(Calendar c, int field){
+        Calendar calendar = getCalendar(c);
+        for(int i=0; i<orderedFields.length; i++){
+            if(field>=orderedFields[i]) continue;
+            
+            calendar.set(orderedFields[i], calendar.getActualMinimum(orderedFields[i]));
         }
         
-        calendar.set(Calendar.YEAR, year);
-        calendar.set(Calendar.MONTH, month);
-        calendar.set(Calendar.DAY_OF_MONTH, day);
-        calendar.set(Calendar.HOUR_OF_DAY, hour);
-        calendar.set(Calendar.MINUTE, min);
-        calendar.set(Calendar.SECOND, sec);
-        calendar.set(Calendar.MILLISECOND, mils);
-
         return calendar;
     }
+    
+    
+    public static Date fill(Date date, int field){
+        return fill( getCalendar(date), field ).getTime();
+    }
+    
+    public static Calendar fill(Calendar c, int field){
+        Calendar calendar = getCalendar(c);
+        for(int i=0; i<orderedFields.length; i++){
+            if(field>=orderedFields[i]) continue;
+            
+            calendar.set(orderedFields[i], calendar.getActualMaximum(orderedFields[i]));
+        }
+        
+        return calendar;
+    }
+    
     public static long countDay(Date start, Date end){
         
         

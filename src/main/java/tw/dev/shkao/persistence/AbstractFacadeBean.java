@@ -20,6 +20,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import javax.persistence.metamodel.SingularAttribute;
 import tw.dev.shkao.util.EmUtility;
 
 /**
@@ -183,6 +184,21 @@ public abstract class AbstractFacadeBean<TYPE> implements BaseEntityManager<TYPE
         return v.get(0);
 
     }
+    
+    
+    @Override
+    public TYPE getBy(SingularAttribute<TYPE,?> columnAttribute, Object columnValue) {
+
+        List<TYPE> v = (List<TYPE>) findBy(columnAttribute, columnValue);
+        if (v == null || v.isEmpty()) {
+            return null;
+        } else if (v.size() > 1) {
+            return null;
+        }
+
+        return v.get(0);
+
+    }
 
     @Override
     public List<TYPE> findAll() {
@@ -204,6 +220,37 @@ public abstract class AbstractFacadeBean<TYPE> implements BaseEntityManager<TYPE
         return findEntities(cq) ;
     }
 
+    @Override
+    public List<TYPE> findBy(SingularAttribute<TYPE,?> columnAttribute, Object ... values) {
+        
+        if (columnAttribute == null ) {
+            throw new IllegalArgumentException(getClass().getName() + ".findBy(): No columnName given");
+        }
+
+        if (values == null || values.length == 0) {
+            throw new IllegalArgumentException(getClass().getName() + ".findBy(): No columnValue given");
+        }
+
+        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+
+        CriteriaQuery<TYPE> query = cb.createQuery(getEntityClass());
+        Root<TYPE> r = query.from(getEntityClass());
+        query.select(r);
+        
+        List<Predicate> predicateList = new ArrayList<>();
+        for (int i = 0; i < values.length; ++i) {
+            if (values[i] != null) {
+                predicateList.add(cb.equal(r.get(columnAttribute), values[i]));
+            } else {
+                predicateList.add(cb.isNull(r.get(columnAttribute)));
+            }
+        }
+
+        query.where( cb.or( predicateList.toArray(new Predicate[predicateList.size()]) ));
+
+        return findEntities(query);
+    }
+    
     @Override
     public List<TYPE> findBy(String columnName, Object ... values) {
         
@@ -230,7 +277,7 @@ public abstract class AbstractFacadeBean<TYPE> implements BaseEntityManager<TYPE
             }
         }
 
-        query.where(predicateList.toArray(new Predicate[predicateList.size()]));
+        query.where( cb.or( predicateList.toArray(new Predicate[predicateList.size()]) ));
 
         return findEntities(query);
     }

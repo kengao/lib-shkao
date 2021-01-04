@@ -8,6 +8,7 @@ package tw.dev.shkao.persistence;
 import java.util.List;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.metamodel.SingularAttribute;
 
 /**
  *
@@ -34,8 +35,12 @@ import javax.persistence.criteria.CriteriaQuery;
     List<TYPE> find(CriteriaQuery<TYPE> cq);
     
     List<TYPE> findBy(String columnName, Object... values);
-
+    
+    List<TYPE> findBy(SingularAttribute<TYPE,?> columnAttribute, Object ... values);
+    
     TYPE getBy(String columnName, Object value);
+    
+    TYPE getBy(SingularAttribute<TYPE,?> columnAttribute, Object value);
     
     TYPE get(CriteriaQuery<TYPE> cq);
 

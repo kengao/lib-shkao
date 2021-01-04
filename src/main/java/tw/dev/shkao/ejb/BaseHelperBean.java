@@ -8,23 +8,32 @@ package tw.dev.shkao.ejb;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 
 /**
  *
  * @author kengao
  */
-public abstract class AbstractHelperBean {
+public class BaseHelperBean {
     
     private static final Logger LOGGER = tw.dev.shkao.util.log.Logger.EJB.getLogger();
     
     @PostConstruct
-    private void postConstruct() {
+    private void postConstruct(){
         initialize();
+    }
+    
+    
+    @PreDestroy
+    private void preDestroy(){
+        release();
     }
 
     protected void initialize() {
     }
     
+    protected void release() {
+    }
     protected void logInfo(Throwable throwable) {
         log(Level.INFO, null, throwable);
     }
